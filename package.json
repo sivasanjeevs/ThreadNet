@@ -1,0 +1,14 @@
+{
+  "name": "threadnet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ThreadNet - Chat system with admin and user web UIs",
+  "scripts": {
+    "install:all": "npm install && cd bridge && npm install && cd ../admin-frontend && npm install && cd ../user-frontend && npm install",
+    "build:admin": "cd admin-frontend && npm run build",
+    "build:user": "cd user-frontend && npm run build",
+    "dev:bridge": "cd bridge && npm run dev",
+    "dev:admin": "cd admin-frontend && npm run dev",
+    "dev:user": "cd user-frontend && npm run dev"
+  }
+}

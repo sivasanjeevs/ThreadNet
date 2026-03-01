@@ -1,0 +1,209 @@
+:root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  color: #111827;
+  background-color: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: #f9fafb;
+}
+
+/* Page 1: Centered Admin button */
+.admin-home {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.admin-btn {
+  padding: 0.9rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  background: #111827;
+  border: 1px solid #111827;
+  border-radius: 999px;
+  color: #f9fafb;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.admin-btn:hover {
+  background: #000000;
+  transform: translateY(-1px);
+}
+
+/* Page 2: Admin Dashboard */
+.admin-dashboard {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  padding: 0.4rem 0.9rem;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  color: #374151;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.back-btn:hover {
+  background: #e5e7eb;
+}
+
+.dashboard-header h1 {
+  color: #111827;
+  font-size: 1.3rem;
+}
+
+.error-msg {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #b91c1c;
+  font-size: 0.9rem;
+}
+
+.section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.section h2 {
+  font-size: 1rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.action-btn {
+  padding: 0.75rem 1.5rem;
+  background: #111827;
+  border: 1px solid #111827;
+  border-radius: 999px;
+  color: #f9fafb;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.action-btn:hover:not(:disabled) {
+  background: #000000;
+}
+
+.action-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.compile-result {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.compile-result.success {
+  background: #ecfdf3;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+.compile-result.failed {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.compile-result pre {
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.port-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.port-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+}
+
+.port-row input {
+  width: 100px;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.plus-btn {
+  padding: 0.5rem 1rem;
+  background: #e5e7eb;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  color: #111827;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.plus-btn:hover {
+  background: #d1d5db;
+}
+
+.server-list {
+  margin-bottom: 1rem;
+}
+
+.server-item {
+  padding: 0.5rem;
+  background: #f3f4f6;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.server-item code {
+  color: #38bdf8;
+  font-size: 0.85rem;
+}
