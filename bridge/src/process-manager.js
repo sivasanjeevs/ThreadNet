@@ -53,7 +53,8 @@ export function startServers(ports) {
   for (const port of ports) {
     const proc = spawn('./server', [String(port)], {
       cwd: ROOT_DIR,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      // Avoid stdout/stderr backpressure (long-running procs).
+      stdio: ['ignore', 'ignore', 'ignore'],
     });
     processes.servers.push(proc);
   }
@@ -66,7 +67,9 @@ export function startLoadBalancer(startingPort, totalServers) {
   }
   const proc = spawn('./loadbalancer', [], {
     cwd: ROOT_DIR,
-    stdio: ['pipe', 'pipe', 'pipe'],
+    // Keep stdin (so we can write startingPort/totalServers),
+    // but ignore stdout/stderr to prevent buffer backpressure.
+    stdio: ['pipe', 'ignore', 'ignore'],
   });
   // Load balancer reads cin for starting port and total servers
   setTimeout(() => {

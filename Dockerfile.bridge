@@ -1,0 +1,25 @@
+FROM node:20-bookworm
+
+# Install compiler toolchain for building the C++ TCP backend.
+RUN apt-get update && apt-get install -y --no-install-recommends g++ make \
+  && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy C++ backend sources (bridge compiles them at runtime on boot).
+COPY server.cpp loadbalancer.cpp client.cpp Makefile ./
+
+# Copy bridge package files first for faster layer caching.
+COPY bridge/package*.json ./bridge/
+RUN cd bridge && npm ci
+
+# Copy bridge sources.
+COPY bridge/src ./bridge/src
+
+EXPOSE 3001
+
+# Bridge auto-starts backend when AUTO_START is true (set in docker-compose).
+ENV AUTO_START=false
+
+CMD ["node", "bridge/src/index.js"]
+

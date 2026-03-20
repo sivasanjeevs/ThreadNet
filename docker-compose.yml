@@ -1,0 +1,21 @@
+services:
+  bridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.bridge
+    environment:
+      # Enable "compile + start servers + start load balancer" at container startup.
+      AUTO_START: "true"
+      # Comma-separated list of backend server ports (must match your C++ backend setup).
+      THREADNET_SERVER_PORTS: "7000,7001,7002"
+    expose:
+      - "3001"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "80:80"
+    depends_on:
+      - bridge

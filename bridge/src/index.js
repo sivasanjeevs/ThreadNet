@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import net from 'net';
 import { config } from './config.js';
 import {
   getServerPort,
@@ -24,6 +25,64 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: { origin: '*' },
 });
+
+function parsePorts(value) {
+  if (!value) return null;
+  const ports = value
+    .split(',')
+    .map((v) => Number(String(v).trim()))
+    .filter((n) => Number.isFinite(n) && n > 0);
+  return ports.length ? ports : null;
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function waitForTcp(host, port, timeoutMs = 10000, intervalMs = 250) {
+  const start = Date.now();
+  return new Promise((resolve, reject) => {
+    const tryConnect = () => {
+      const socket = net.createConnection({ host, port }, () => {
+        socket.destroy();
+        resolve(true);
+      });
+      socket.on('error', () => {
+        socket.destroy();
+        if (Date.now() - start > timeoutMs) {
+          reject(new Error(`Timeout waiting for ${host}:${port}`));
+          return;
+        }
+        setTimeout(tryConnect, intervalMs);
+      });
+    };
+    tryConnect();
+  });
+}
+
+async function autoStartBackendIfEnabled() {
+  const enabled = process.env.AUTO_START === 'true' || process.env.AUTO_START === '1';
+  if (!enabled) return;
+
+  const ports = parsePorts(process.env.THREADNET_SERVER_PORTS || process.env.SERVER_PORTS) || config.serverPorts;
+  const startingPort = ports[0];
+
+  console.log('[ThreadNet] AUTO_START enabled. Compiling + starting backend...');
+  const compileResult = await compile();
+  if (!compileResult?.success) {
+    console.error('[ThreadNet] AUTO_START compile failed:', compileResult);
+    return;
+  }
+
+  startServers(ports);
+  // Give backend servers a moment to start accepting connections.
+  await sleep(300);
+  startLoadBalancer(startingPort, ports.length);
+
+  // Ensure the load balancer port is reachable before accepting browser joins.
+  await waitForTcp(config.loadBalancer.host, config.loadBalancer.port);
+  console.log('[ThreadNet] AUTO_START backend is ready.');
+}
 
 // --- REST API (for admin) ---
 
@@ -201,10 +260,19 @@ io.on('connection', (socket) => {
 // --- Start ---
 
 const { port, host } = config.bridge;
-httpServer.listen(port, host, () => {
-  console.log(`ThreadNet Bridge running at http://${host}:${port}`);
-  console.log(`  - REST API: http://localhost:${port}/api/*`);
-  console.log(`  - WebSocket: ws://localhost:${port}`);
-  console.log(`  - Load balancer (clients connect here): ${config.loadBalancer.host}:${config.loadBalancer.port}`);
-  console.log(`  - Backend server ports (run ./server on these): ${config.serverPorts.join(', ')}`);
-});
+autoStartBackendIfEnabled()
+  .catch((err) => {
+    // Still start the bridge so the UI shows errors instead of failing entirely.
+    console.error('[ThreadNet] AUTO_START failed:', err);
+  })
+  .finally(() => {
+    httpServer.listen(port, host, () => {
+      console.log(`ThreadNet Bridge running at http://${host}:${port}`);
+      console.log(`  - REST API: http://localhost:${port}/api/*`);
+      console.log(`  - WebSocket: ws://localhost:${port}`);
+      console.log(
+        `  - Load balancer (clients connect here): ${config.loadBalancer.host}:${config.loadBalancer.port}`
+      );
+      console.log(`  - Backend server ports: ${config.serverPorts.join(', ')}`);
+    });
+  });
