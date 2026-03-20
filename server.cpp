@@ -147,8 +147,8 @@ void end_connection(int id, string room)
 void handle_client_connection(int client_socket, int id)
 {
 	char name[MAX_LEN],room[MAX_LEN],str[MAX_LEN];
-	recv(client_socket,name,sizeof(name),0);
-	recv(client_socket,room,sizeof(room),0);
+	recv(client_socket, name, sizeof(name), MSG_WAITALL);
+	recv(client_socket, room, sizeof(room), MSG_WAITALL);
 	set_Client(id,name,room);
 	if(strcmp(name,"__LoadBalancer__") == 0 && strcmp(room,"__getLoad?__") == 0)
 	{
@@ -166,7 +166,7 @@ void handle_client_connection(int client_socket, int id)
 	}
 	while(true)
 	{
-		int bytes_received = recv(client_socket,str,sizeof(str),0);
+		int bytes_received = recv(client_socket, str, sizeof(str), MSG_WAITALL);
 		if(bytes_received <= 0)
 			return;
 		if(strcmp(str,"#exit") == 0)

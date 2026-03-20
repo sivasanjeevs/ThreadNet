@@ -164,8 +164,8 @@ void *balance_load(void *arg)
 	
 	free(arg);
 	char name[MAX_LEN],room[MAX_LEN];
-    recv(server_socket,name,sizeof(name),0);
-    recv(server_socket,room,sizeof(room),0);
+	recv(server_socket, name, sizeof(name), MSG_WAITALL);
+	recv(server_socket, room, sizeof(room), MSG_WAITALL);
 	cout<<"Client ("<<name<<") connected.\n";
     if(roomServerDict.find(string(room)) != roomServerDict.end())
     {

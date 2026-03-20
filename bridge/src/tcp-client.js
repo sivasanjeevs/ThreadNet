@@ -20,8 +20,8 @@ export function getServerPort(name, room) {
     const socket = net.createConnection(
       { host: config.loadBalancer.host, port: config.loadBalancer.port },
       () => {
-        socket.write(toFixedBuffer(name));
-        socket.write(toFixedBuffer(room));
+        // Combined write
+        socket.write(Buffer.concat([toFixedBuffer(name), toFixedBuffer(room)]));
       }
     );
 
@@ -48,8 +48,8 @@ export function connectToChatServer(serverPort, name, room) {
     const socket = net.createConnection(
       { host: config.loadBalancer.host, port: serverPort },
       () => {
-        socket.write(toFixedBuffer(name));
-        socket.write(toFixedBuffer(room));
+        // Combined write
+        socket.write(Buffer.concat([toFixedBuffer(name), toFixedBuffer(room)]));
         resolve(socket);
       }
     );
@@ -67,8 +67,11 @@ export function getServerLoad(serverPort) {
     const socket = net.createConnection(
       { host: config.loadBalancer.host, port: serverPort },
       () => {
-        socket.write(toFixedBuffer('__LoadBalancer__'));
-        socket.write(toFixedBuffer('__getLoad?__'));
+        // Combined write
+        socket.write(Buffer.concat([
+          toFixedBuffer('__LoadBalancer__'), 
+          toFixedBuffer('__getLoad?__')
+        ]));
       }
     );
 
