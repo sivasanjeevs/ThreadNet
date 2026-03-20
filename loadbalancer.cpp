@@ -14,7 +14,7 @@ using namespace std;
 #define MAX_LEN 256
 #define BACKLOG 10
 #define SERVER_NAME_LEN_MAX 255
-#define PORT 6000
+#define PORT 7000
 vector<int> SERVERPORTS;
 map<string,int> roomServerDict;
 int clientNumber = 0;

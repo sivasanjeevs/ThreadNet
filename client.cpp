@@ -9,7 +9,7 @@
 #include <thread>
 #include <signal.h>
 #include <mutex>
-#define PORT 6000
+#define PORT 7000
 #define MAX_LEN 256
 #define NUM_COLORS 6
 using namespace std;

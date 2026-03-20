@@ -143,7 +143,7 @@ function AdminDashboard({ onBack }) {
 
           <section className="section">
             <h2>3. Start Load Balancer</h2>
-            <p className="hint">Runs on port 6000 by default</p>
+            <p className="hint">Runs on port 7000 by default</p>
             <button
               className="action-btn"
               onClick={handleStartLoadBalancer}

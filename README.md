@@ -8,7 +8,7 @@ Multi-threaded, load-balanced chat room system with a C++ TCP backend and web UI
 
 ### Backend (C++)
 
-1. **Load Balancer** (port 6000) accepts client connections. Each client sends **name** and **room ID**.
+1. **Load Balancer** (port 7000) accepts client connections. Each client sends **name** and **room ID**.
 2. The load balancer asks each **server** for its current client count and uses **Round-Robin** to pick the least loaded server for that room.
 3. The client connects to the chosen **server**. Servers run on ports you choose (e.g. 7000, 7001, 7002).
 4. Each server runs **one thread per client**. **Mutex locks** avoid race conditions when broadcasting messages.
@@ -23,7 +23,7 @@ Multi-threaded, load-balanced chat room system with a C++ TCP backend and web UI
 ### Flow (one user joining a room)
 
 ```
-Browser (User UI)  →  WebSocket  →  Bridge  →  TCP  →  Load Balancer (6000)
+Browser (User UI)  →  WebSocket  →  Bridge  →  TCP  →  Load Balancer (7000)
                                                           ↓
                                                     Server port (e.g. 7000)
                                                           ↓
@@ -113,7 +113,7 @@ Then start the bridge and frontends as in steps 1–2 and 4 above.
 
 Edit `bridge/src/config.js` if you use different ports:
 
-- `loadBalancer.port`: 6000 (where the load balancer listens).
+- `loadBalancer.port`: 7000 (where the load balancer listens).
 - `serverPorts`: list of backend server ports (e.g. [7000, 7001, 7002]).
 
 ---
